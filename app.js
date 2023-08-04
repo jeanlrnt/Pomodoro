@@ -1,5 +1,7 @@
-let workTime = 1800;
-let restTime = 300;
+const workTimeDefault = 20;
+const restTimeDefault = 10;
+let workTime = workTimeDefault;
+let restTime = restTimeDefault;
 
 function formattedTime(time) {
   return `${Math.trunc(time / 60)}:${time % 60 < 10 ? '0' + time % 60 : time % 60}`;
@@ -8,10 +10,8 @@ function formattedTime(time) {
 const displayWork = document.querySelector('.work-display-time');
 const displayRest = document.querySelector('.rest-display-time');
 
-
 displayWork.textContent = formattedTime(workTime);
 displayRest.textContent = formattedTime(restTime);
-
 
 const toggleBtn = document.querySelector('.toggle-start-btn');
 
@@ -26,6 +26,7 @@ function togglePomodoro() {
     currentInterval = true;
 
     workTime--;
+    handleClassAnimation({work: true, rest: false})
     displayWork.textContent = formattedTime(workTime);
     timerId = setInterval(handleTicks, 1000);
 }
@@ -65,22 +66,41 @@ function handleTicks() {
         handleClassAnimation({work: false, rest: true});
     } else if (!pause && !workTime && !restTime) {
         cycleCount++;
-        cycles.textContent = 'Cycle(s) :' + cycleCount;
-        workTime = 1799;
-        restTime = 300;
+        cycles.textContent = `Cycles : ${cycleCount}`;
+        workTime = workTimeDefault;
+        restTime = restTimeDefault;
         displayWork.textContent = formattedTime(workTime);
         displayRest.textContent = formattedTime(restTime);
         handleClassAnimation({work: true, rest: false});
     }
 }
 
-function handleClassAnimation(itemState) {
-    for(const item in itemState) {
-        if (itemState[item]) {
-            document.querySelector(`.${item}`).classList.add('active');
-        } else {
-            document.querySelector(`.${item}`).classList.remove('active');
-        }
+function handleClassAnimation({work, rest}) {
+    let workDisplay = document.querySelector(`.work`);
+    let workProgressBar = workDisplay.parentNode.querySelector('.progress-bar');
+    let restDisplay = document.querySelector(`.rest`);
+    let restProgressBar = restDisplay.parentNode.querySelector('.progress-bar');
+    if (work) {
+        document.querySelector('.work').classList.add('active');
+        document.querySelector('.rest').classList.remove('active');
+        let width = 100 - (workTime / workTimeDefault * 100);
+        workProgressBar.style.width = `${width}%`;
+        workProgressBar.style.transition = 'width 1s linear';
+    } else {
+        document.querySelector('.work').classList.remove('active');
+        workProgressBar.style.width = '0';
+        workProgressBar.style.transition = 'none';
+    }
+    if (rest) {
+        document.querySelector('.rest').classList.add('active');
+        document.querySelector('.work').classList.remove('active');
+        let width = 100 - (restTime / restTimeDefault * 100);
+        restProgressBar.style.width = `${width}%`;
+        restProgressBar.style.transition = 'width 1s linear';
+    } else {
+        document.querySelector('.rest').classList.remove('active');
+        restProgressBar.style.width = '0';
+        restProgressBar.style.transition = 'none';
     }
 }
 
@@ -89,8 +109,8 @@ const resetBtn = document.querySelector('.reset-btn');
 resetBtn.addEventListener('click', resetPomodoro);
 
 function resetPomodoro() {
-    workTime = 1800;
-    restTime = 300;
+    workTime = workTimeDefault;
+    restTime = restTimeDefault;
     displayWork.textContent = formattedTime(workTime);
     displayRest.textContent = formattedTime(restTime);
 
