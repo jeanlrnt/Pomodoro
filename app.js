@@ -1,5 +1,5 @@
-let workTime = 3;
-let restTime = 3;
+let workTime = 1800;
+let restTime = 300;
 
 function formattedTime(time) {
   return `${Math.trunc(time / 60)}:${time % 60 < 10 ? '0' + time % 60 : time % 60}`;
