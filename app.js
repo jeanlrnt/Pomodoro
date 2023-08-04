@@ -95,7 +95,7 @@ function resetPomodoro() {
     displayRest.textContent = formattedTime(restTime);
 
     cycleCount = 0;
-    cycles.textContent = 'Cycle(s) :' + cycleCount;
+    cycles.textContent = `Cycles : ${cycleCount}`;
 
     clearInterval(timerId);
     currentInterval = false;
