@@ -1,5 +1,5 @@
-const workTimeDefault = 20;
-const restTimeDefault = 10;
+const workTimeDefault = 1800;
+const restTimeDefault = 300;
 let workTime = workTimeDefault;
 let restTime = restTimeDefault;
 
